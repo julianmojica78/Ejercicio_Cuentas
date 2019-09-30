@@ -1,0 +1,9 @@
+Entity\Inversor.class
+Entity\Cuenta_.class
+Persistence\InversorFacade.class
+Entity\Cuenta.class
+Interfaces\AbstractFacade.class
+Persistence\CuentaFacade.class
+Entity\Inversor_.class
+Interfaces\InversorFacadeLocal.class
+Interfaces\CuentaFacadeLocal.class

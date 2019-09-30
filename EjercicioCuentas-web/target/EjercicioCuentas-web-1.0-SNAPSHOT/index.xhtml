@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="formulario">
+            <p:growl id="growl" life="5000" showDetail="true" sticky="true"/>
+            <p:accordionPanel>
+                <p:tab title="Agregar">
+                    <h:panelGrid  id="grid" columns="2">
+                        <p:outputLabel value="Nombre del Inversor: "/>
+                        <p:inputText value="#{operaciones.usuario.nombre}"/>
+
+                        <p:commandButton value="Guardar solo inversor" action="#{operaciones.agregarInversor(operaciones.usuario.nombre)}" update=":formularioDatos"/>
+                        <p:outputLabel value=" "/>
+                        <p:outputLabel value="Numero de cuenta:"  />
+                        <p:inputText value="#{operaciones.cuentaUser.cuenta}" />
+
+                        <p:outputLabel value="Inversor a asignarle cuenta: " />
+                        <p:selectOneMenu id="nombreInversor" value="#{operaciones.inversorCuenta}" >
+                            <f:selectItem itemLabel="Seleccione inversor" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{operaciones.traerNombres()}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Agregar solo cuenta" action="#{operaciones.agregarCuentaSolo(operaciones.inversorCuenta, operaciones.cuentaUser.cuenta)}" update=":formularioDatos" />
+                        <p:commandButton value="Crear Ambos " action="#{operaciones.agregarCuenta(operaciones.usuario.nombre, operaciones.cuentaUser.cuenta)}" update=":formularioDatos"/>
+
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="Editar">
+                    <h:panelGrid  id="grid2" columns="2">
+                        <p:outputLabel value="Usuario a editar" />
+                        <p:selectOneMenu id="nombre" value="#{operaciones.nombreUsuario}" >
+                            <p:ajax listener="#{operaciones.onCountryChange}" update="cuenta" />
+                            <f:selectItem itemLabel="Seleccione inversor" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{operaciones.traerNombres()}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Nuevo nombre: " />
+                        <p:inputText value="#{operaciones.nombreEditar}" />
+                        <p:commandButton value="Editar" action="#{operaciones.editarDesdeInversor(operaciones.nombreUsuario , operaciones.nombreEditar)}" update=":formularioDatos"/>
+                        <p:outputLabel value=""/>
+                        <p:outputLabel value="Cuenta a editar: " />
+                        <p:selectOneMenu id="cuenta" value="#{operaciones.cuentaUsuario}" >
+                            <f:selectItem itemLabel="Seleccione cuenta" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{operaciones.cuentas}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Nuevo numero de cuenta: " />
+                        <p:inputText value="#{operaciones.cuentaNueva}" />
+                        <p:commandButton value="Editar Cuenta" actionListener ="#{operaciones.editarDesdeCuenta(operaciones.cuentaUsuario , operaciones.cuentaNueva)}" update=":formularioDatos" />
+                    </h:panelGrid>
+                </p:tab>   
+
+            </p:accordionPanel>
+        </h:form>
+        <h:form id="formularioDatos" >
+            <p:dataTable id="tablaInversor" var="lista" value="#{operaciones.traerInversores()}">
+                <p:column headerText="Id">
+                    <h:outputText value="#{lista.id}" />
+                </p:column>
+
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{lista.nombre}" />
+                </p:column>
+                <p:column headerText="Eliminar">
+                    <p:commandButton value="Eliminar" action="#{operaciones.eliminarDesdeInversor(lista)}" update=":formularioDatos"/>
+                </p:column>
+            </p:dataTable>
+
+            <p:dataTable var="lista" value="#{operaciones.traerCuentas()}">
+                <p:column headerText="Id">
+                    <h:outputText value="#{lista.id}" />
+                </p:column>
+
+                <p:column headerText="Cuenta">
+                    <h:outputText value="#{lista.cuenta}" />
+                </p:column>
+
+                <p:column headerText="Id Inversor">
+                    <h:outputText value="#{lista.inversor.nombre}" />
+                </p:column>
+
+                <p:column headerText="Eliminar">
+                    <p:commandButton value="Eliminar" action="#{operaciones.eliminarDesdeCuenta(lista)}" update=":formularioDatos" />
+                </p:column>
+
+            </p:dataTable>
+
+
+
+        </h:form>
+    </h:body>
+</html>
+
